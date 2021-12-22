@@ -32,5 +32,13 @@ services:
     networks:
       - elastic
 
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.4.0
+    environment:
+      - setup.kibana.host=kibana:5601
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    networks:
+      - elastic
+
 networks:
   elastic: null
