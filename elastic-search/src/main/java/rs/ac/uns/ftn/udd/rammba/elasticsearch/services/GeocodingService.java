@@ -3,7 +3,6 @@ package rs.ac.uns.ftn.udd.rammba.elasticsearch.services;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.controller.dto.GeocodingListDto;
@@ -23,8 +22,6 @@ public class GeocodingService implements IGeocodingService {
 		try {
 			GeocodingListDto dto = mapper.readValue(json, GeocodingListDto.class);
 			return dto.getCoordinates();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
