@@ -1,7 +1,6 @@
 package rs.ac.uns.ftn.udd.rammba.elasticsearch.services;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.index.IndexRequest;
@@ -23,8 +22,7 @@ public class ElasticsearchService implements IElasticsearchService {
 		RestHighLevelClient restClient = new RestHighLevelClient(
 				RestClient.builder(new HttpHost("localhost", 9200, "http"), new HttpHost("localhost", 9201, "http")));
 
-		UUID uuid = UUID.randomUUID();
-		IndexRequest request = new IndexRequest(indexName, "doc", uuid.toString());
+		IndexRequest request = new IndexRequest(indexName);
 		request.source(json, XContentType.JSON);
 
 		try {
