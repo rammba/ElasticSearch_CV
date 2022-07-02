@@ -9,11 +9,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { HttpClientModule } from '@angular/common/http';
+import { SearchComponent } from './features/search/search.component';
+import { FullNameSearchComponent } from './features/search/full-name-search/full-name-search.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
     AppComponent,
-    JobApplicationComponent
+    JobApplicationComponent,
+    SearchComponent,
+    FullNameSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +28,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatInputModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
-    HttpClientModule
+    HttpClientModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

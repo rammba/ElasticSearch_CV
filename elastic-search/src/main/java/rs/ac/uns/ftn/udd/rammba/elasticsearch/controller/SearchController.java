@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IElasticsearchService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(value = "/api/search/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SearchController {
 
@@ -30,10 +32,10 @@ public class SearchController {
 	public ResponseEntity<Object> searchByFullName(@RequestParam(name = "name", required = false) String name,
 			@RequestParam(name = "surname", required = false) String surname) {
 		Map<String, String> fields = new HashMap<String, String>();
-		if (name != null) {
+		if (name != null && !name.isBlank()) {
 			fields.put("name", name);
 		}
-		if (surname != null) {
+		if (surname != null && !surname.isBlank()) {
 			fields.put("surname", surname);
 		}
 		
@@ -44,7 +46,7 @@ public class SearchController {
 	@GetMapping(value = "degree")
 	public ResponseEntity<Object> searchByDegree(@RequestParam(name = "degree", required = false) String degree) {
 		Map<String, String> fields = new HashMap<String, String>();
-		if (degree != null) {
+		if (degree != null && !degree.isBlank()) {
 			fields.put("degree", degree);
 		}
 		

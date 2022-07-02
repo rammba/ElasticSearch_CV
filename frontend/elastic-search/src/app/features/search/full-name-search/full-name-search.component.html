@@ -1,0 +1,12 @@
+<div [formGroup]="form" style="display: flex; flex-direction: column;">
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Surname</mat-label>
+        <input matInput formControlName="surname">
+    </mat-form-field>
+</div>
+
+<button class="button" type="submit" (click)="onSubmit()">Search</button>

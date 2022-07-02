@@ -21,6 +21,7 @@ export class JobService {
     body.append("degree", degree);
     body.append("cv", cv);
 
-    this.http.post('http://localhost:9000/api/job/application', body).subscribe(a => alert(a ? 'Success' : 'Fail'));
+    this.http.post('http://localhost:9000/api/job/application', body)
+      .subscribe(a => alert(a ? 'Success' : 'Fail'));
   }
 }
