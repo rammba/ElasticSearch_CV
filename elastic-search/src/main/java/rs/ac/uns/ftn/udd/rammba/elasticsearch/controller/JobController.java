@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.udd.rammba.elasticsearch.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,20 +19,22 @@ import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.Coordinates;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IElasticsearchService;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IFileStorageService;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IGeocodingService;
+import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IGeolocationService;
 
 @RestController
 @RequestMapping(value = "/api/job/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class JobController {
 
 	private IGeocodingService geocodingService;
+	private IGeolocationService geolocationService;
 	private IElasticsearchService elasticService;
 	private IFileStorageService fileStorageService;
 
 	@Autowired
-	public JobController(IGeocodingService geocodingService,
-			IElasticsearchService elasticService,
-			IFileStorageService fileStorageService) {
+	public JobController(IGeocodingService geocodingService, IGeolocationService geolocationService,
+			IElasticsearchService elasticService, IFileStorageService fileStorageService) {
 		this.geocodingService = geocodingService;
+		this.geolocationService = geolocationService;
 		this.elasticService = elasticService;
 		this.fileStorageService = fileStorageService;
 	}
@@ -41,7 +45,7 @@ public class JobController {
 			@RequestParam(name = "mail", required = true) String mail,
 			@RequestParam(name = "address", required = true) String address,
 			@RequestParam(name = "degree", required = true) String degree,
-			@RequestParam(name = "cv", required = true) MultipartFile cv) {
+			@RequestParam(name = "cv", required = true) MultipartFile cv, HttpServletRequest request) {
 		try {
 			String fileName = fileStorageService.save(cv);
 		} catch (IllegalArgumentException e) {
