@@ -1,0 +1,27 @@
+<div [formGroup]="form" style="display: flex; flex-direction: column;">
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Surname</mat-label>
+        <input matInput formControlName="surname">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Mail</mat-label>
+        <input matInput formControlName="mail">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="address">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Degree</mat-label>
+        <input matInput formControlName="degree">
+    </mat-form-field>
+</div>
+<div>
+    <input type="file" accept="application/pdf" (change)="handleCvInput($event.target)">
+</div>
+
+<button class="button" type="submit" (click)="onSubmit()">Send</button>
