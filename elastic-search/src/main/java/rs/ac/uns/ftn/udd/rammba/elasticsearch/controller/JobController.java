@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.Coordinates;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IElasticsearchService;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IFileStorageService;
@@ -53,14 +54,15 @@ public class JobController {
 		}
 
 		Coordinates c = geocodingService.getCoordinates(address);
-		indexCoordinates(c);
+		ApplicantIndexingUnit applicant = new ApplicantIndexingUnit(name, surname, degree, c.latitude, c.longitude);
+		indexApplicant(applicant);
 		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
 
-	private void indexCoordinates(Coordinates c) {
+	private void indexApplicant(ApplicantIndexingUnit a) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			String json = mapper.writeValueAsString(c);
+			String json = mapper.writeValueAsString(a);
 			boolean works = elasticService.createIndex("temp", json);
 			System.out.println(works);
 		} catch (JsonProcessingException e) {
