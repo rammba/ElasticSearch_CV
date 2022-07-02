@@ -71,8 +71,9 @@ public class ElasticsearchService implements IElasticsearchService {
 				String applicantDegree = (String) sourceAsMap.get("degree");
 				double latitude = (double) sourceAsMap.get("latitude");
 				double longitude = (double) sourceAsMap.get("longitude");
+				String cvContent = (String) sourceAsMap.get("cvContent");
 				applicant = new ApplicantIndexingUnit(applicantName, applicantSurname, applicantDegree, latitude,
-						longitude);
+						longitude, cvContent);
 				results.add(applicant);
 			}
 		} catch (IOException e) {

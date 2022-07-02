@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.udd.rammba.elasticsearch.controller;
 
+import java.io.File;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.Coordinates;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IElasticsearchService;
-import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IFileStorageService;
+import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IFileService;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IGeocodingService;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IGeolocationService;
 
@@ -29,15 +31,15 @@ public class JobController {
 	private IGeocodingService geocodingService;
 	private IGeolocationService geolocationService;
 	private IElasticsearchService elasticService;
-	private IFileStorageService fileStorageService;
+	private IFileService fileService;
 
 	@Autowired
 	public JobController(IGeocodingService geocodingService, IGeolocationService geolocationService,
-			IElasticsearchService elasticService, IFileStorageService fileStorageService) {
+			IElasticsearchService elasticService, IFileService fileService) {
 		this.geocodingService = geocodingService;
 		this.geolocationService = geolocationService;
 		this.elasticService = elasticService;
-		this.fileStorageService = fileStorageService;
+		this.fileService = fileService;
 	}
 
 	@PostMapping(value = "application")
@@ -47,14 +49,17 @@ public class JobController {
 			@RequestParam(name = "address", required = true) String address,
 			@RequestParam(name = "degree", required = true) String degree,
 			@RequestParam(name = "cv", required = true) MultipartFile cv, HttpServletRequest request) {
+		File savedCv;
 		try {
-			String fileName = fileStorageService.save(cv);
+			savedCv = fileService.save(cv);
 		} catch (IllegalArgumentException e) {
 			return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
 		}
+		String cvContent = fileService.getContent(savedCv);
 
 		Coordinates c = geocodingService.getCoordinates(address);
-		ApplicantIndexingUnit applicant = new ApplicantIndexingUnit(name, surname, degree, c.latitude, c.longitude);
+		ApplicantIndexingUnit applicant = new ApplicantIndexingUnit(name, surname, degree, c.latitude, c.longitude,
+				cvContent);
 		indexApplicant(applicant);
 		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
