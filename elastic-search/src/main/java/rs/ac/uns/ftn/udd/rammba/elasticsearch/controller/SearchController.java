@@ -42,13 +42,19 @@ public class SearchController {
 	}
 	
 	@GetMapping(value = "degree")
-	public ResponseEntity<Object> searchByFullName(@RequestParam(name = "degree", required = false) String degree) {
+	public ResponseEntity<Object> searchByDegree(@RequestParam(name = "degree", required = false) String degree) {
 		Map<String, String> fields = new HashMap<String, String>();
 		if (degree != null) {
 			fields.put("degree", degree);
 		}
 		
 		Iterable<ApplicantIndexingUnit> results = elasticService.getByFields(fields);
+		return new ResponseEntity<>(results, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "cv")
+	public ResponseEntity<Object> searchCvName(@RequestParam(name = "cvContent", required = false) String cvContent) {
+		Iterable<ApplicantIndexingUnit> results = elasticService.getByCvContent(cvContent);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 }

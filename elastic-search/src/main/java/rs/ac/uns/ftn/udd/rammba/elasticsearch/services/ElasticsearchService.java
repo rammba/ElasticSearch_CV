@@ -12,7 +12,9 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.xcontent.XContentType;
@@ -25,6 +27,7 @@ import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
 public class ElasticsearchService implements IElasticsearchService {
 
 	private RestHighLevelClient client;
+	private final String indexName = "applicants";
 
 	public ElasticsearchService() {
 		client = new RestHighLevelClient(
@@ -32,7 +35,7 @@ public class ElasticsearchService implements IElasticsearchService {
 	}
 
 	@Override
-	public boolean createIndex(String indexName, String json) {
+	public boolean createIndex(String json) {
 		// https://github.com/elastic/elasticsearch-java/issues/74#issuecomment-1020542030
 		// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.8/java-rest-high-document-index.html
 		IndexRequest request = new IndexRequest(indexName);
@@ -49,9 +52,7 @@ public class ElasticsearchService implements IElasticsearchService {
 
 	@Override
 	public Iterable<ApplicantIndexingUnit> getByFields(Map<String, String> fields) {
-		ArrayList<ApplicantIndexingUnit> results = new ArrayList<ApplicantIndexingUnit>();
-
-		SearchRequest searchRequest = new SearchRequest("temp");
+		SearchRequest searchRequest = new SearchRequest(indexName);
 		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
 		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
 		for (Map.Entry<String, String> entry : fields.entrySet()) {
@@ -59,6 +60,24 @@ public class ElasticsearchService implements IElasticsearchService {
 		}
 		sourceBuilder.query(queryBuilder);
 		searchRequest.source(sourceBuilder);
+		return getResults(searchRequest);
+	}
+
+	@Override
+	public Iterable<ApplicantIndexingUnit> getByCvContent(String cvContent) {
+		SearchRequest searchRequest = new SearchRequest(indexName);
+		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+
+		QueryStringQueryBuilder queryBuilder = new QueryStringQueryBuilder(cvContent);
+		queryBuilder.defaultField("cvContent");
+		queryBuilder.defaultOperator(Operator.AND);
+		sourceBuilder.query(queryBuilder);
+		searchRequest.source(sourceBuilder);
+		return getResults(searchRequest);
+	}
+
+	private Iterable<ApplicantIndexingUnit> getResults(SearchRequest searchRequest) {
+		ArrayList<ApplicantIndexingUnit> results = new ArrayList<ApplicantIndexingUnit>();
 
 		try {
 			SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
@@ -66,19 +85,19 @@ public class ElasticsearchService implements IElasticsearchService {
 			ApplicantIndexingUnit applicant;
 			for (SearchHit hit : searchHits) {
 				Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-				String applicantName = (String) sourceAsMap.get("name");
-				String applicantSurname = (String) sourceAsMap.get("surname");
-				String applicantDegree = (String) sourceAsMap.get("degree");
+				String name = (String) sourceAsMap.get("name");
+				String surname = (String) sourceAsMap.get("surname");
+				String degree = (String) sourceAsMap.get("degree");
 				double latitude = (double) sourceAsMap.get("latitude");
 				double longitude = (double) sourceAsMap.get("longitude");
 				String cvContent = (String) sourceAsMap.get("cvContent");
-				applicant = new ApplicantIndexingUnit(applicantName, applicantSurname, applicantDegree, latitude,
-						longitude, cvContent);
+				applicant = new ApplicantIndexingUnit(name, surname, degree, latitude, longitude, cvContent);
 				results.add(applicant);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		return results;
 	}
 

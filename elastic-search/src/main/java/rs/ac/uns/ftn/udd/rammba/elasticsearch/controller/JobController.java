@@ -68,7 +68,7 @@ public class JobController {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			String json = mapper.writeValueAsString(a);
-			boolean works = elasticService.createIndex("temp", json);
+			boolean works = elasticService.createIndex(json);
 			System.out.println(works);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
