@@ -6,12 +6,12 @@ import java.util.Map;
 
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.search.MultiSearchRequest;
-import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -50,33 +50,30 @@ public class ElasticsearchService implements IElasticsearchService {
 	@Override
 	public Iterable<ApplicantIndexingUnit> getByFields(Map<String, String> fields) {
 		ArrayList<ApplicantIndexingUnit> results = new ArrayList<ApplicantIndexingUnit>();
-		MultiSearchRequest multiSearchRequest = new MultiSearchRequest();
+
+		SearchRequest searchRequest = new SearchRequest("temp");
+		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
 		for (Map.Entry<String, String> entry : fields.entrySet()) {
-			SearchRequest searchRequest = new SearchRequest("temp");
-			SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-			sourceBuilder.query(QueryBuilders.matchQuery(entry.getKey(), entry.getValue()));
-			searchRequest.source(sourceBuilder);
-			multiSearchRequest.add(searchRequest);
+			queryBuilder.must(QueryBuilders.matchQuery(entry.getKey(), entry.getValue()));
 		}
+		sourceBuilder.query(queryBuilder);
+		searchRequest.source(sourceBuilder);
 
 		try {
-			MultiSearchResponse searchResponse = client.msearch(multiSearchRequest, RequestOptions.DEFAULT);
-			MultiSearchResponse.Item[] items = searchResponse.getResponses();
+			SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+			SearchHit[] searchHits = searchResponse.getHits().getHits();
 			ApplicantIndexingUnit applicant;
-			for (int i = 0; i < items.length; i++) {
-				MultiSearchResponse.Item result = items[i];
-				SearchHit[] searchHits = result.getResponse().getHits().getHits();
-				for (SearchHit hit : searchHits) {
-					Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-					String applicantName = (String) sourceAsMap.get("name");
-					String applicantSurname = (String) sourceAsMap.get("surname");
-					String applicantDegree = (String) sourceAsMap.get("degree");
-					double latitude = (double) sourceAsMap.get("latitude");
-					double longitude = (double) sourceAsMap.get("longitude");
-					applicant = new ApplicantIndexingUnit(applicantName, applicantSurname, applicantDegree, latitude,
-							longitude);
-					results.add(applicant);
-				}
+			for (SearchHit hit : searchHits) {
+				Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+				String applicantName = (String) sourceAsMap.get("name");
+				String applicantSurname = (String) sourceAsMap.get("surname");
+				String applicantDegree = (String) sourceAsMap.get("degree");
+				double latitude = (double) sourceAsMap.get("latitude");
+				double longitude = (double) sourceAsMap.get("longitude");
+				applicant = new ApplicantIndexingUnit(applicantName, applicantSurname, applicantDegree, latitude,
+						longitude);
+				results.add(applicant);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
