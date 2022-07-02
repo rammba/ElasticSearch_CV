@@ -12,7 +12,9 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
 import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.search.SearchHit;
@@ -52,25 +54,31 @@ public class ElasticsearchService implements IElasticsearchService {
 
 	@Override
 	public Iterable<ApplicantIndexingUnit> getByFields(Map<String, String> fields) {
-		SearchRequest searchRequest = new SearchRequest(indexName);
-		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
 		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
 		for (Map.Entry<String, String> entry : fields.entrySet()) {
 			queryBuilder.must(QueryBuilders.matchQuery(entry.getKey(), entry.getValue()));
 		}
-		sourceBuilder.query(queryBuilder);
-		searchRequest.source(sourceBuilder);
-		return getResults(searchRequest);
+		return search(queryBuilder);
 	}
 
 	@Override
 	public Iterable<ApplicantIndexingUnit> getByCvContent(String cvContent) {
-		SearchRequest searchRequest = new SearchRequest(indexName);
-		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-
 		QueryStringQueryBuilder queryBuilder = new QueryStringQueryBuilder(cvContent);
 		queryBuilder.defaultField("cvContent");
 		queryBuilder.defaultOperator(Operator.AND);
+		return search(queryBuilder);
+	}
+	
+
+	@Override
+	public Iterable<ApplicantIndexingUnit> phraseSearch(String namePhrase, String surnamePhrase, String cvPhrase) {
+		MatchPhraseQueryBuilder queryBuilder = new MatchPhraseQueryBuilder("cvContent", cvPhrase);
+		return search(queryBuilder);
+	}
+	
+	private Iterable<ApplicantIndexingUnit> search(QueryBuilder queryBuilder) {
+		SearchRequest searchRequest = new SearchRequest(indexName);
+		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
 		sourceBuilder.query(queryBuilder);
 		searchRequest.source(sourceBuilder);
 		return getResults(searchRequest);

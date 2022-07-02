@@ -57,4 +57,12 @@ public class SearchController {
 		Iterable<ApplicantIndexingUnit> results = elasticService.getByCvContent(cvContent);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "phrase")
+	public ResponseEntity<Object> phraseSearch(@RequestParam(name = "namePhrase", required = false) String namePhrase,
+			@RequestParam(name = "surnamePhrase", required = false) String surnamePhrase,
+			@RequestParam(name = "cvPhrase", required = false) String cvPhrase) {
+		Iterable<ApplicantIndexingUnit> results = elasticService.phraseSearch(namePhrase, surnamePhrase, cvPhrase);
+		return new ResponseEntity<>(results, HttpStatus.OK);
+	}
 }
