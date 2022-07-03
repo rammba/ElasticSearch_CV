@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.udd.rammba.elasticsearch.services;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpHost;
@@ -22,6 +23,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import rs.ac.uns.ftn.udd.rammba.elasticsearch.controller.dto.BooleanSearchDto;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.Coordinates;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.repository.ApplicantRepository;
@@ -80,6 +82,16 @@ public class ElasticsearchService implements IElasticsearchService {
 		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
 		for (int i = 0; i < keys.size(); i++) {
 			addToBooleanQuery(queryBuilder, keys.get(i), values.get(i), isAndOperation);
+		}
+
+		return search(queryBuilder);
+	}
+	
+	@Override
+	public Iterable<ApplicantIndexingUnit> advancedBooleanSearch(List<BooleanSearchDto> request) {
+		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
+		for (BooleanSearchDto dto : request) {
+			addToBooleanQuery(queryBuilder, dto.key, dto.value, dto.isAndOperation);
 		}
 
 		return search(queryBuilder);

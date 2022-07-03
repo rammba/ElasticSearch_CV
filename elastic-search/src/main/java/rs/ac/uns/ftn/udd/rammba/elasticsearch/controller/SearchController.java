@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.udd.rammba.elasticsearch.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -87,6 +90,12 @@ public class SearchController {
 		ArrayList<String> keys = new ArrayList<String>(Arrays.asList(key1, key2));
 		ArrayList<String> values = new ArrayList<String>(Arrays.asList(value1, value2));
 		Iterable<ApplicantIndexingUnit> results = elasticService.simpleBooleanSearch(keys, values, isAndOperation);
+		return new ResponseEntity<>(results, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "boolean-advanced")
+	public ResponseEntity<Object> advancedBooleanSearch(@RequestBody List<BooleanSearchDto> body) {
+		Iterable<ApplicantIndexingUnit> results = elasticService.advancedBooleanSearch(body);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 
