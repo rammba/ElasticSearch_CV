@@ -77,17 +77,15 @@ public class SearchController {
 		Iterable<ApplicantIndexingUnit> results = elasticService.phraseSearch(namePhrase, surnamePhrase, cvPhrase);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "boolean-simple")
 	public ResponseEntity<Object> simpleBooleanSearch(@RequestParam(name = "key1", required = true) String key1,
 			@RequestParam(name = "value1", required = true) String value1,
 			@RequestParam(name = "key2", required = true) String key2,
 			@RequestParam(name = "value2", required = true) String value2,
 			@RequestParam(name = "isAndOperation", required = true) boolean isAndOperation) {
-		Map<String, String> fields = new HashMap<String, String>();
-		fields.put(key1, value1);
-		fields.put(key2, value2);
-		Iterable<ApplicantIndexingUnit> results  = elasticService.simpleBooleanSearch(fields, isAndOperation);
+		Iterable<ApplicantIndexingUnit> results = elasticService.simpleBooleanSearch(key1, value1, key2, value2,
+				isAndOperation);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 

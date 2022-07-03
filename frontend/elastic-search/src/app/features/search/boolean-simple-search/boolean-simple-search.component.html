@@ -1,0 +1,23 @@
+<div [formGroup]="form">
+    <mat-select formControlName="key1">
+        <mat-option *ngFor="let field of fieldOptions" [value]="field">{{field}}</mat-option>
+    </mat-select>
+    <mat-form-field appearance="fill">
+        <input matInput formControlName="value1">
+    </mat-form-field>
+    <mat-checkbox formControlName="isAndOperation">AND</mat-checkbox>
+    <mat-select formControlName="key2">
+        <mat-option *ngFor="let field of fieldOptions" [value]="field">{{field}}</mat-option>
+    </mat-select>
+    <mat-form-field appearance="fill">
+        <input matInput formControlName="value2">
+    </mat-form-field>
+</div>
+
+<button class="button" type="submit" (click)="onSubmit()">Search</button>
+
+<app-applicant-list [applicants]="applicants" *ngIf="applicants.length"></app-applicant-list>
+<div *ngIf="!applicants.length">
+    <br>
+    <label>No results</label>
+</div>

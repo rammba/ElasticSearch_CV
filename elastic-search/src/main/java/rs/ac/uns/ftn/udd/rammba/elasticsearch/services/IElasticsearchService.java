@@ -7,8 +7,13 @@ import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
 public interface IElasticsearchService {
 
 	void createIndex(ApplicantIndexingUnit unit);
+
 	Iterable<ApplicantIndexingUnit> searchByFields(Map<String, String> fields);
+
 	Iterable<ApplicantIndexingUnit> searchByCvContent(String cvContent);
+
 	Iterable<ApplicantIndexingUnit> phraseSearch(String namePhrase, String surnamePhrase, String cvPhrase);
-	Iterable<ApplicantIndexingUnit> simpleBooleanSearch(Map<String, String> fields, boolean isAndOperation);
+
+	Iterable<ApplicantIndexingUnit> simpleBooleanSearch(String key1, String value1, String key2, String value2,
+			boolean isAndOperation);
 }

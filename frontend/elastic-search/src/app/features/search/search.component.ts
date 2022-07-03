@@ -10,6 +10,7 @@ export class SearchComponent implements OnInit {
   fullName: boolean = false;
   degree: boolean = false;
   cvContent: boolean = false;
+  simpleBoolean: boolean = false;
 
   constructor() { }
 

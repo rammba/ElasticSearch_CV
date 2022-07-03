@@ -71,28 +71,26 @@ public class ElasticsearchService implements IElasticsearchService {
 	}
 
 	@Override
-	public Iterable<ApplicantIndexingUnit> simpleBooleanSearch(Map<String, String> fields, boolean isAndOperation) {
-		if (fields.keySet().size() != 2) {
-			return new ArrayList<ApplicantIndexingUnit>();
-		}
-
+	public Iterable<ApplicantIndexingUnit> simpleBooleanSearch(String key1, String value1, String key2, String value2,
+			boolean isAndOperation) {
 		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
-		for (Map.Entry<String, String> entry : fields.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			QueryBuilder qb = QueryBuilders.matchQuery(key, value);
-			if (key.equals("cvContent")) {
-				qb = new QueryStringQueryBuilder(value);
-				((QueryStringQueryBuilder) qb).defaultField("cvContent");
-				((QueryStringQueryBuilder) qb).defaultOperator(Operator.AND);
-			}
-			if (isAndOperation) {
-				queryBuilder.must(qb);
-			} else {
-				queryBuilder.should(qb);
-			}
-		}
+		addToBooleanQuery(queryBuilder, key1, value1, isAndOperation);
+		addToBooleanQuery(queryBuilder, key2, value2, isAndOperation);
 		return search(queryBuilder);
+	}
+	
+	private void addToBooleanQuery(BoolQueryBuilder queryBuilder, String key, String value, boolean isAndOperation) {
+		QueryBuilder qb = QueryBuilders.matchQuery(key, value);
+		if (key.equals("cvContent")) {
+			qb = new QueryStringQueryBuilder(value);
+			((QueryStringQueryBuilder) qb).defaultField("cvContent");
+			((QueryStringQueryBuilder) qb).defaultOperator(Operator.AND);
+		}
+		if (isAndOperation) {
+			queryBuilder.must(qb);
+		} else {
+			queryBuilder.should(qb);
+		}
 	}
 
 	private Iterable<ApplicantIndexingUnit> search(QueryBuilder queryBuilder) {

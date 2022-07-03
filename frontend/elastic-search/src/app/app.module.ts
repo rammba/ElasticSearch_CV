@@ -17,6 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 import { DegreeSearchComponent } from './features/search/degree-search/degree-search.component';
 import { CvContentSearchComponent } from './features/search/cv-content-search/cv-content-search.component';
 import { MatSelectModule } from '@angular/material/select';
+import { BooleanSimpleSearchComponent } from './features/search/boolean-simple-search/boolean-simple-search.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { MatSelectModule } from '@angular/material/select';
     FullNameSearchComponent,
     ApplicantListComponent,
     DegreeSearchComponent,
-    CvContentSearchComponent
+    CvContentSearchComponent,
+    BooleanSimpleSearchComponent
   ],
   imports: [
     BrowserModule,
