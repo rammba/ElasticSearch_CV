@@ -70,6 +70,31 @@ public class ElasticsearchService implements IElasticsearchService {
 		return search(queryBuilder);
 	}
 
+	@Override
+	public Iterable<ApplicantIndexingUnit> simpleBooleanSearch(Map<String, String> fields, boolean isAndOperation) {
+		if (fields.keySet().size() != 2) {
+			return new ArrayList<ApplicantIndexingUnit>();
+		}
+
+		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
+		for (Map.Entry<String, String> entry : fields.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+			QueryBuilder qb = QueryBuilders.matchQuery(key, value);
+			if (key.equals("cvContent")) {
+				qb = new QueryStringQueryBuilder(value);
+				((QueryStringQueryBuilder) qb).defaultField("cvContent");
+				((QueryStringQueryBuilder) qb).defaultOperator(Operator.AND);
+			}
+			if (isAndOperation) {
+				queryBuilder.must(qb);
+			} else {
+				queryBuilder.should(qb);
+			}
+		}
+		return search(queryBuilder);
+	}
+
 	private Iterable<ApplicantIndexingUnit> search(QueryBuilder queryBuilder) {
 		SearchRequest searchRequest = new SearchRequest(indexName);
 		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();

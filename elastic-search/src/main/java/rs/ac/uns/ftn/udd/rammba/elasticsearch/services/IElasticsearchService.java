@@ -10,4 +10,5 @@ public interface IElasticsearchService {
 	Iterable<ApplicantIndexingUnit> searchByFields(Map<String, String> fields);
 	Iterable<ApplicantIndexingUnit> searchByCvContent(String cvContent);
 	Iterable<ApplicantIndexingUnit> phraseSearch(String namePhrase, String surnamePhrase, String cvPhrase);
+	Iterable<ApplicantIndexingUnit> simpleBooleanSearch(Map<String, String> fields, boolean isAndOperation);
 }
