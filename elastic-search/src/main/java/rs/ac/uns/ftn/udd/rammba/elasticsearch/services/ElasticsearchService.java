@@ -87,6 +87,45 @@ public class ElasticsearchService implements IElasticsearchService {
 	}
 
 	@Override
+	public Iterable<ApplicantIndexingUnit> advancedBooleanSearch(String query) {
+		final String and = " AND ";
+		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
+
+		String andParts[] = query.split(and);
+		if (andParts.length == 1) {
+			queryBuilder = getOrQueryBuilder(andParts[0]);
+		} else {
+			for (String andPart : andParts) {
+				queryBuilder.must(getOrQueryBuilder(andPart));
+			}
+		}
+
+		return search(queryBuilder);
+	}
+
+	private BoolQueryBuilder getOrQueryBuilder(String query) {
+		final String or = " OR ";
+		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
+
+		String[] orParts = query.split(or);
+		for (String orPart : orParts) {
+			BooleanSearchDto dto = getBooleanSearch(orPart, false);
+			addToBooleanQuery(queryBuilder, dto.key, dto.value, false);
+		}
+
+		return queryBuilder;
+	}
+
+	private BooleanSearchDto getBooleanSearch(String query, boolean isAndOperator) {
+		String[] parts = query.split("=");
+		if (parts.length != 2) {
+			return null;
+		}
+
+		return new BooleanSearchDto(parts[0], parts[1], isAndOperator);
+	}
+
+	@Override
 	public Iterable<ApplicantIndexingUnit> geospatialSearch(Coordinates coordinates, double radius) {
 		MatchAllQueryBuilder queryBuilder = new MatchAllQueryBuilder();
 		ArrayList<ApplicantIndexingUnit> result = new ArrayList<ApplicantIndexingUnit>();

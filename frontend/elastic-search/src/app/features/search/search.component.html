@@ -13,5 +13,8 @@
 <mat-checkbox [(ngModel)]="simpleBoolean">Boolean simple search</mat-checkbox>
 <app-boolean-simple-search *ngIf="simpleBoolean"></app-boolean-simple-search>
 <br>
+<mat-checkbox [(ngModel)]="queryBoolean">Boolean query search</mat-checkbox>
+<app-boolean-query-search *ngIf="queryBoolean"></app-boolean-query-search>
+<br>
 <mat-checkbox [(ngModel)]="geospatial">Geospatial search</mat-checkbox>
 <app-geospatial-search *ngIf="geospatial"></app-geospatial-search>

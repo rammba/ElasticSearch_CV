@@ -20,6 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { BooleanSimpleSearchComponent } from './features/search/boolean-simple-search/boolean-simple-search.component';
 import { PhraseSearchComponent } from './features/search/phrase-search/phrase-search.component';
 import { GeospatialSearchComponent } from './features/search/geospatial-search/geospatial-search.component';
+import { BooleanQuerySearchComponent } from './features/search/boolean-query-search/boolean-query-search.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { GeospatialSearchComponent } from './features/search/geospatial-search/g
     CvContentSearchComponent,
     BooleanSimpleSearchComponent,
     PhraseSearchComponent,
-    GeospatialSearchComponent
+    GeospatialSearchComponent,
+    BooleanQuerySearchComponent
   ],
   imports: [
     BrowserModule,

@@ -20,4 +20,6 @@ public interface IElasticsearchService {
 	Iterable<ApplicantIndexingUnit> advancedBooleanSearch(List<BooleanSearchDto> request);
 
 	Iterable<ApplicantIndexingUnit> geospatialSearch(Coordinates coordinates, double radius);
+	
+	Iterable<ApplicantIndexingUnit> advancedBooleanSearch(String query);
 }

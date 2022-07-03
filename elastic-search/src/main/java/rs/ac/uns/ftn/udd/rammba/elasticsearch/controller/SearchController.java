@@ -22,7 +22,6 @@ import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.Coordinates;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IElasticsearchService;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IGeocodingService;
-import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IGeospatialService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -30,14 +29,11 @@ import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IGeospatialService;
 public class SearchController {
 
 	private IElasticsearchService elasticService;
-	private IGeospatialService geospatialService;
 	private IGeocodingService geocodingService;
 
 	@Autowired
-	public SearchController(IElasticsearchService elasticService, IGeospatialService geospatialService,
-			IGeocodingService geocodingService) {
+	public SearchController(IElasticsearchService elasticService, IGeocodingService geocodingService) {
 		this.elasticService = elasticService;
-		this.geospatialService = geospatialService;
 		this.geocodingService = geocodingService;
 	}
 
@@ -99,10 +95,10 @@ public class SearchController {
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "boolean")
+	@GetMapping(value = "boolean-query")
 	public ResponseEntity<Object> booleanSearch(@RequestParam(name = "query", required = true) String query) {
-		Iterable<BooleanSearchDto> dto = getBooleanDtos(query);
-		return new ResponseEntity<>(null, HttpStatus.OK);
+		Iterable<ApplicantIndexingUnit> result = elasticService.advancedBooleanSearch(query);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "geospatial")
@@ -111,43 +107,5 @@ public class SearchController {
 		Coordinates coordinates = geocodingService.getCoordinates(city);
 		Iterable<ApplicantIndexingUnit> results = elasticService.geospatialSearch(coordinates, radius);
 		return new ResponseEntity<>(results, HttpStatus.OK);
-	}
-
-	private Iterable<BooleanSearchDto> getBooleanDtos(String query) {
-		final String and = " AND ";
-		final String or = " OR ";
-		ArrayList<BooleanSearchDto> res = new ArrayList<BooleanSearchDto>();
-		if (!query.contains(and) || !query.contains(or)) {
-			BooleanSearchDto dto = getBooleanDto(query, null);
-			if (dto == null) {
-				return res;
-			}
-			res.add(dto);
-			return res;
-		}
-
-		String[] andParts = query.split(and);
-		for (int i = 0; i < andParts.length; i++) {
-			String[] orParts = andParts[i].split(or);
-			if (orParts.length == 1) {
-				res.add(getBooleanDto(orParts[0], true));
-			} else {
-				for (int j = 0; j < orParts.length; j++) {
-					Boolean isAndOperator = j == orParts.length - 1 ? null : false;
-					res.add(getBooleanDto(orParts[j], isAndOperator));
-				}
-			}
-		}
-
-		return res;
-	}
-
-	private BooleanSearchDto getBooleanDto(String item, Boolean isAndOperator) {
-		String[] parts = item.split("=");
-		if (parts.length != 2) {
-			return null;
-		}
-
-		return new BooleanSearchDto(parts[0], parts[1], isAndOperator);
 	}
 }

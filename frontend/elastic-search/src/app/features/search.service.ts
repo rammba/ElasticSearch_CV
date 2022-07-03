@@ -53,6 +53,13 @@ export class SearchService {
     return this.http.get<Applicant[]>(this.pathPrefix + 'boolean-simple', { headers: this.getHeaders(), params: params });
   }
 
+  booleanQuery(query: string): Observable<Applicant[]> {
+    let params = new HttpParams()
+      .set('query', query)
+
+    return this.http.get<Applicant[]>(this.pathPrefix + 'boolean-query', { headers: this.getHeaders(), params: params });
+  }
+
   geospatial(city: string, radius: number): Observable<Applicant[]> {
     let params = new HttpParams()
       .set('city', city)
