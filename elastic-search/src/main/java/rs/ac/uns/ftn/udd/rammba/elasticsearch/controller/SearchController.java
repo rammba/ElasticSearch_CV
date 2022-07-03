@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.udd.rammba.elasticsearch.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import rs.ac.uns.ftn.udd.rammba.elasticsearch.controller.dto.BooleanSearchDto;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.Coordinates;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IElasticsearchService;
@@ -76,6 +78,12 @@ public class SearchController {
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "boolean")
+	public ResponseEntity<Object> booleanSearch(@RequestParam(name = "query", required = true) String query) {
+		Iterable<BooleanSearchDto> dto = getBooleanDtos(query);
+		return new ResponseEntity<>(null, HttpStatus.OK);
+	}
+
 	@GetMapping(value = "geospatial")
 	public ResponseEntity<Object> geospatialSearch(@RequestParam(name = "city", required = true) String city,
 			@RequestParam(name = "radius", required = true) double radius) {
@@ -83,5 +91,43 @@ public class SearchController {
 		Coordinates c2 = geocodingService.getCoordinates("Beograd");
 		double x = geospatialService.distance(c1, c2);
 		return new ResponseEntity<>(x, HttpStatus.OK);
+	}
+
+	private Iterable<BooleanSearchDto> getBooleanDtos(String query) {
+		final String and = " AND ";
+		final String or = " OR ";
+		ArrayList<BooleanSearchDto> res = new ArrayList<BooleanSearchDto>();
+		if (!query.contains(and) || !query.contains(or)) {
+			BooleanSearchDto dto = getBooleanDto(query, null);
+			if (dto == null) {
+				return res;
+			}
+			res.add(dto);
+			return res;
+		}
+
+		String[] andParts = query.split(and);
+		for (int i = 0; i < andParts.length; i++) {
+			String[] orParts = andParts[i].split(or);
+			if (orParts.length == 1) {
+				res.add(getBooleanDto(orParts[0], true));
+			} else {
+				for (int j = 0; j < orParts.length; j++) {
+					Boolean isAndOperator = j == orParts.length - 1 ? null : false;
+					res.add(getBooleanDto(orParts[j], isAndOperator));
+				}
+			}
+		}
+
+		return res;
+	}
+
+	private BooleanSearchDto getBooleanDto(String item, Boolean isAndOperator) {
+		String[] parts = item.split("=");
+		if (parts.length != 2) {
+			return null;
+		}
+
+		return new BooleanSearchDto(parts[0], parts[1], isAndOperator);
 	}
 }
