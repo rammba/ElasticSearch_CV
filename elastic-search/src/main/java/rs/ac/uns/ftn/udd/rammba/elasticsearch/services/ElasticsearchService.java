@@ -68,14 +68,13 @@ public class ElasticsearchService implements IElasticsearchService {
 		queryBuilder.defaultOperator(Operator.AND);
 		return search(queryBuilder);
 	}
-	
 
 	@Override
 	public Iterable<ApplicantIndexingUnit> phraseSearch(String namePhrase, String surnamePhrase, String cvPhrase) {
 		MatchPhraseQueryBuilder queryBuilder = new MatchPhraseQueryBuilder("cvContent", cvPhrase);
 		return search(queryBuilder);
 	}
-	
+
 	private Iterable<ApplicantIndexingUnit> search(QueryBuilder queryBuilder) {
 		SearchRequest searchRequest = new SearchRequest(indexName);
 		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
@@ -98,8 +97,11 @@ public class ElasticsearchService implements IElasticsearchService {
 				String degree = (String) sourceAsMap.get("degree");
 				double latitude = (double) sourceAsMap.get("latitude");
 				double longitude = (double) sourceAsMap.get("longitude");
+				double locationLatitude = (double) sourceAsMap.get("locationLatitude");
+				double locationLongitude = (double) sourceAsMap.get("locationLongitude");
 				String cvContent = (String) sourceAsMap.get("cvContent");
-				applicant = new ApplicantIndexingUnit(name, surname, degree, latitude, longitude, cvContent);
+				applicant = new ApplicantIndexingUnit(name, surname, degree, latitude, longitude, locationLatitude,
+						locationLongitude, cvContent);
 				results.add(applicant);
 			}
 		} catch (IOException e) {

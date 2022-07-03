@@ -7,16 +7,20 @@ public class ApplicantIndexingUnit {
 	private String degree;
 	private double latitude;
 	private double longitude;
+	private double locationLatitude;
+	private double locationLongitude;
 	private String cvContent;
 
 	public ApplicantIndexingUnit(String name, String surname, String degree, double latitude, double longitude,
-			String cvContent) {
+			double locationLatitude, double locationLongitude, String cvContent) {
 		super();
 		this.name = name;
 		this.surname = surname;
 		this.degree = degree;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.locationLatitude = locationLatitude;
+		this.locationLongitude = locationLongitude;
 		this.cvContent = cvContent;
 	}
 
@@ -58,6 +62,22 @@ public class ApplicantIndexingUnit {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	public double getLocationLatitude() {
+		return locationLatitude;
+	}
+
+	public void setLocationLatitude(double locationLatitude) {
+		this.locationLatitude = locationLatitude;
+	}
+
+	public double getLocationLongitude() {
+		return locationLongitude;
+	}
+
+	public void setLocationLongitude(double locationLongitude) {
+		this.locationLongitude = locationLongitude;
 	}
 
 	public String getCvContent() {

@@ -59,9 +59,11 @@ public class JobController {
 		}
 		String cvContent = fileService.getContent(savedCv);
 
-		Coordinates c = geocodingService.getCoordinates(address);
-		ApplicantIndexingUnit applicant = new ApplicantIndexingUnit(name, surname, degree, c.latitude, c.longitude,
-				cvContent);
+		Coordinates addressCoordinates = geocodingService.getCoordinates(address);
+		String ip = geolocationService.getClientIp(request);
+		Coordinates ipCoordinates = geolocationService.getCoordinates(ip);
+		ApplicantIndexingUnit applicant = new ApplicantIndexingUnit(name, surname, degree, addressCoordinates.latitude,
+				addressCoordinates.longitude, ipCoordinates.latitude, ipCoordinates.longitude, cvContent);
 		indexApplicant(applicant);
 		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
