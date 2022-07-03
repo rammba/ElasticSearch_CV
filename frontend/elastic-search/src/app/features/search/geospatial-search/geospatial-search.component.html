@@ -1,0 +1,16 @@
+<div [formGroup]="form" style="display: flex; flex-direction: column;">
+    <mat-form-field appearance="fill">
+        <input matInput formControlName="city">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <input matInput formControlName="radius" type="number" min="0">
+    </mat-form-field>
+</div>
+
+<button class="button" type="submit" (click)="onSubmit()">Search</button>
+
+<app-applicant-list [applicants]="applicants" *ngIf="applicants.length"></app-applicant-list>
+<div *ngIf="!applicants.length">
+    <br>
+    <label>No results</label>
+</div>

@@ -48,9 +48,17 @@ export class SearchService {
       .set('value1', value1)
       .set('key2', key2)
       .set('value2', value2)
-      .set('isAndOperation', isAndOperation)
+      .set('isAndOperation', isAndOperation);
 
     return this.http.get<Applicant[]>(this.pathPrefix + 'boolean-simple', { headers: this.getHeaders(), params: params });
+  }
+
+  geospatial(city: string, radius: number): Observable<Applicant[]> {
+    let params = new HttpParams()
+      .set('city', city)
+      .set('radius', radius);
+
+    return this.http.get<Applicant[]>(this.pathPrefix + 'geospatial', { headers: this.getHeaders(), params: params });
   }
 
   private getHeaders(): HttpHeaders {

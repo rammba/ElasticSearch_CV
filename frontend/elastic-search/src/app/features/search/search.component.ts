@@ -12,6 +12,7 @@ export class SearchComponent implements OnInit {
   cvContent: boolean = false;
   phrase: boolean = false;
   simpleBoolean: boolean = false;
+  geospatial: boolean = false;
 
   constructor() { }
 
