@@ -12,6 +12,7 @@ export class JobApplicationComponent implements OnInit {
 
   form: FormGroup = this.createForm();
   uploadedCv!: File;
+  degreeOptions = ['bez skole', '4 razreda', 'osnovna', 'srednja strucna', 'gimnazija', 'fakultet', 'master', 'doktorat'];
 
   constructor(private jobService: JobService, private router: Router) { }
 

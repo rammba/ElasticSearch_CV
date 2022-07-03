@@ -1,10 +1,16 @@
 <div [formGroup]="form" style="display: flex; flex-direction: column;">
     <mat-form-field appearance="fill">
         <mat-label>Degree</mat-label>
-        <input matInput formControlName="degree">
+        <mat-select formControlName="degree">
+            <mat-option *ngFor="let deg of degreeOptions" [value]="deg">{{deg}}</mat-option>
+        </mat-select>
     </mat-form-field>
 </div>
 
 <button class="button" type="submit" (click)="onSubmit()">Search</button>
 
 <app-applicant-list [applicants]="applicants" *ngIf="applicants.length"></app-applicant-list>
+<div *ngIf="!applicants.length">
+    <br>
+    <label>No results</label>
+</div>

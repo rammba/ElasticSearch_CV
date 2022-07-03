@@ -16,6 +16,7 @@ import { ApplicantListComponent } from './features/search/applicant-list/applica
 import { MatTableModule } from '@angular/material/table';
 import { DegreeSearchComponent } from './features/search/degree-search/degree-search.component';
 import { CvContentSearchComponent } from './features/search/cv-content-search/cv-content-search.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { CvContentSearchComponent } from './features/search/cv-content-search/cv
     MatFormFieldModule,
     HttpClientModule,
     MatCheckboxModule,
-    MatTableModule
+    MatTableModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

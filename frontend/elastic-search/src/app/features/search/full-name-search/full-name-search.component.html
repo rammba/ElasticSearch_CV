@@ -12,3 +12,7 @@
 <button class="button" type="submit" (click)="onSubmit()">Search</button>
 
 <app-applicant-list [applicants]="applicants" *ngIf="applicants.length"></app-applicant-list>
+<div *ngIf="!applicants.length">
+    <br>
+    <label>No results</label>
+</div>

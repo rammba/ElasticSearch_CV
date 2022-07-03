@@ -17,7 +17,9 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
         <mat-label>Degree</mat-label>
-        <input matInput formControlName="degree">
+        <mat-select formControlName="degree">
+            <mat-option *ngFor="let deg of degreeOptions" [value]="deg">{{deg}}</mat-option>
+        </mat-select>
     </mat-form-field>
 </div>
 <div>
