@@ -12,13 +12,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { SearchComponent } from './features/search/search.component';
 import { FullNameSearchComponent } from './features/search/full-name-search/full-name-search.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ApplicantListComponent } from './features/search/applicant-list/applicant-list.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
     AppComponent,
     JobApplicationComponent,
     SearchComponent,
-    FullNameSearchComponent
+    FullNameSearchComponent,
+    ApplicantListComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +32,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     BrowserAnimationsModule,
     MatFormFieldModule,
     HttpClientModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

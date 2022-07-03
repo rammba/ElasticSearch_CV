@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Applicant } from '../../models/applicant.model';
 import { SearchService } from '../../search.service';
 
 @Component({
@@ -10,6 +11,7 @@ import { SearchService } from '../../search.service';
 export class FullNameSearchComponent implements OnInit {
 
   form: FormGroup = this.createForm();
+  applicants: Applicant[] = [];
 
   constructor(private searchService: SearchService) { }
 
@@ -17,7 +19,8 @@ export class FullNameSearchComponent implements OnInit {
   }
 
   public onSubmit() {
-    this.searchService.byFullName(this.form.get('name')?.value, this.form.get('surname')?.value);
+    this.searchService.byFullName(this.form.get('name')?.value, this.form.get('surname')?.value)
+      .subscribe((applicants) => this.applicants = applicants);
   }
 
   private createForm(): FormGroup {
@@ -25,6 +28,12 @@ export class FullNameSearchComponent implements OnInit {
       name: new FormControl(''),
       surname: new FormControl('')
     });
+  }
+
+  private getApplicants(applicants: Applicant[]) {
+    for (let a of applicants) {
+      console.log(a);
+    }
   }
 
 }

@@ -1,5 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Applicant } from './models/applicant.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,7 @@ export class SearchService {
 
   constructor(private http: HttpClient) { }
 
-  byFullName(name: string, surname: string) {
+  byFullName(name: string, surname: string): Observable<Applicant[]> {
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'multipart/form-data');
     headers.append('Accept', 'application/json');
@@ -19,9 +21,6 @@ export class SearchService {
       .set("name", name)
       .set("surname", surname);
 
-    // this.http.post(this.pathPrefix + 'full-name', body)
-    //   .subscribe(a => console.log(a));
-    this.http.get(this.pathPrefix + 'full-name', { headers: headers, params: params })
-      .subscribe(a => console.log(a));
+    return this.http.get<Applicant[]>(this.pathPrefix + 'full-name', { headers: headers, params: params });
   }
 }
