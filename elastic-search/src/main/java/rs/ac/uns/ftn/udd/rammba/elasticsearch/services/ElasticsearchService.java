@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.http.HttpHost;
-import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -19,37 +18,33 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.xcontent.XContentType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
+import rs.ac.uns.ftn.udd.rammba.elasticsearch.repository.ApplicantRepository;
 
 @SuppressWarnings("deprecation")
 @Service
 public class ElasticsearchService implements IElasticsearchService {
 
 	private RestHighLevelClient client;
-	private final String indexName = "applicants";
+	private final String indexName = ApplicantIndexingUnit.INDEX_NAME;
 
-	public ElasticsearchService() {
+	private ApplicantRepository applicantRepository;
+
+	@Autowired
+	public ElasticsearchService(ApplicantRepository applicantRepository) {
+		this.applicantRepository = applicantRepository;
 		client = new RestHighLevelClient(
 				RestClient.builder(new HttpHost("localhost", 9200, "http"), new HttpHost("localhost", 9201, "http")));
 	}
 
 	@Override
-	public boolean createIndex(String json) {
+	public void createIndex(ApplicantIndexingUnit unit) {
 		// https://github.com/elastic/elasticsearch-java/issues/74#issuecomment-1020542030
 		// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/6.8/java-rest-high-document-index.html
-		IndexRequest request = new IndexRequest(indexName);
-		request.source(json, XContentType.JSON);
-
-		try {
-			client.index(request, RequestOptions.DEFAULT);
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+		applicantRepository.save(unit);
 	}
 
 	@Override

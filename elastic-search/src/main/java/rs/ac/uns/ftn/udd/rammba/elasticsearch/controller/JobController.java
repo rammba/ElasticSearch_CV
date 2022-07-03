@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.Coordinates;
+import rs.ac.uns.ftn.udd.rammba.elasticsearch.repository.ApplicantRepository;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IElasticsearchService;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IFileService;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.services.IGeocodingService;
@@ -64,18 +65,7 @@ public class JobController {
 		Coordinates ipCoordinates = geolocationService.getCoordinates(ip);
 		ApplicantIndexingUnit applicant = new ApplicantIndexingUnit(name, surname, degree, addressCoordinates.latitude,
 				addressCoordinates.longitude, ipCoordinates.latitude, ipCoordinates.longitude, cvContent);
-		indexApplicant(applicant);
+		elasticService.createIndex(applicant);
 		return new ResponseEntity<>(true, HttpStatus.OK);
-	}
-
-	private void indexApplicant(ApplicantIndexingUnit a) {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			String json = mapper.writeValueAsString(a);
-			boolean works = elasticService.createIndex(json);
-			System.out.println(works);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
 	}
 }
