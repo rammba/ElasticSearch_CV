@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { JobService } from '../job.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class JobApplicationComponent implements OnInit {
   form: FormGroup = this.createForm();
   uploadedCv!: File;
 
-  constructor(private jobService: JobService) { }
+  constructor(private jobService: JobService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -28,7 +29,14 @@ export class JobApplicationComponent implements OnInit {
       this.form.get('mail')?.value,
       this.form.get('address')?.value,
       this.form.get('degree')?.value,
-      this.uploadedCv);
+      this.uploadedCv)
+      .subscribe(success => {
+        if (success) {
+          this.router.navigate(['/']);
+        } else {
+          alert('Error');
+        }
+      });
   }
 
   public handleCvInput(target: EventTarget | null) {

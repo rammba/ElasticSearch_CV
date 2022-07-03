@@ -61,12 +61,12 @@ public class GeolocationService implements IGeolocationService {
 			GeolocationDto dto = mapper.readValue(json, GeolocationDto.class);
 			return dto.getCoordinates();
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
 			return getCoordinatesFromHardcodedIp();
 		}
 	}
 
 	private Coordinates getCoordinatesFromHardcodedIp() {
+		System.out.println("Using hardcoded ip!");
 		String json = getGeolocationResponse("188.2.1.1");
 		if (json == null) {
 			return null;
