@@ -14,6 +14,8 @@ import { FullNameSearchComponent } from './features/search/full-name-search/full
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ApplicantListComponent } from './features/search/applicant-list/applicant-list.component';
 import { MatTableModule } from '@angular/material/table';
+import { DegreeSearchComponent } from './features/search/degree-search/degree-search.component';
+import { CvContentSearchComponent } from './features/search/cv-content-search/cv-content-search.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { MatTableModule } from '@angular/material/table';
     JobApplicationComponent,
     SearchComponent,
     FullNameSearchComponent,
-    ApplicantListComponent
+    ApplicantListComponent,
+    DegreeSearchComponent,
+    CvContentSearchComponent
   ],
   imports: [
     BrowserModule,

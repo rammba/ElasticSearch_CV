@@ -4,11 +4,11 @@ import { Applicant } from '../../models/applicant.model';
 import { SearchService } from '../../search.service';
 
 @Component({
-  selector: 'app-full-name-search',
-  templateUrl: './full-name-search.component.html',
-  styleUrls: ['./full-name-search.component.css']
+  selector: 'app-degree-search',
+  templateUrl: './degree-search.component.html',
+  styleUrls: ['./degree-search.component.css']
 })
-export class FullNameSearchComponent implements OnInit {
+export class DegreeSearchComponent implements OnInit {
 
   form: FormGroup = this.createForm();
   applicants: Applicant[] = [];
@@ -19,14 +19,13 @@ export class FullNameSearchComponent implements OnInit {
   }
 
   public onSubmit() {
-    this.searchService.byFullName(this.form.get('name')?.value, this.form.get('surname')?.value)
+    this.searchService.byDegree(this.form.get('degree')?.value)
       .subscribe((applicants) => this.applicants = applicants);
   }
 
   private createForm(): FormGroup {
     return new FormGroup({
-      name: new FormControl(''),
-      surname: new FormControl('')
+      degree: new FormControl('')
     });
   }
 

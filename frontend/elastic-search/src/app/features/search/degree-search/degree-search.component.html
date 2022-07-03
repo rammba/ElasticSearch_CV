@@ -1,0 +1,10 @@
+<div [formGroup]="form" style="display: flex; flex-direction: column;">
+    <mat-form-field appearance="fill">
+        <mat-label>Degree</mat-label>
+        <input matInput formControlName="degree">
+    </mat-form-field>
+</div>
+
+<button class="button" type="submit" (click)="onSubmit()">Search</button>
+
+<app-applicant-list [applicants]="applicants" *ngIf="applicants.length"></app-applicant-list>

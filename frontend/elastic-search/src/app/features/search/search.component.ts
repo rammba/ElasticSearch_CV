@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class SearchComponent implements OnInit {
 
   fullName: boolean = false;
+  degree: boolean = false;
+  cvContent: boolean = false;
 
   constructor() { }
 
