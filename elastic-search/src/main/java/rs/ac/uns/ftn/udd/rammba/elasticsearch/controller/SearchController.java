@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.udd.rammba.elasticsearch.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,8 +85,9 @@ public class SearchController {
 			@RequestParam(name = "key2", required = true) String key2,
 			@RequestParam(name = "value2", required = true) String value2,
 			@RequestParam(name = "isAndOperation", required = true) boolean isAndOperation) {
-		Iterable<ApplicantIndexingUnit> results = elasticService.simpleBooleanSearch(key1, value1, key2, value2,
-				isAndOperation);
+		ArrayList<String> keys = new ArrayList<String>(Arrays.asList(key1, key2));
+		ArrayList<String> values = new ArrayList<String>(Arrays.asList(value1, value2));
+		Iterable<ApplicantIndexingUnit> results = elasticService.simpleBooleanSearch(keys, values, isAndOperation);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 
@@ -98,10 +100,9 @@ public class SearchController {
 	@GetMapping(value = "geospatial")
 	public ResponseEntity<Object> geospatialSearch(@RequestParam(name = "city", required = true) String city,
 			@RequestParam(name = "radius", required = true) double radius) {
-		Coordinates c1 = geocodingService.getCoordinates("Novi Sad");
-		Coordinates c2 = geocodingService.getCoordinates("Beograd");
-		double x = geospatialService.distance(c1, c2);
-		return new ResponseEntity<>(x, HttpStatus.OK);
+		Coordinates coordinates = geocodingService.getCoordinates(city);
+		Iterable<ApplicantIndexingUnit> results = elasticService.geospatialSearch(coordinates, radius);
+		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 
 	private Iterable<BooleanSearchDto> getBooleanDtos(String query) {

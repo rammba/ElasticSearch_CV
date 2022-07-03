@@ -11,6 +11,7 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchAllQueryBuilder;
 import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
+import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.Coordinates;
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.repository.ApplicantRepository;
 
 @SuppressWarnings("deprecation")
@@ -32,10 +34,12 @@ public class ElasticsearchService implements IElasticsearchService {
 	private final String indexName = ApplicantIndexingUnit.INDEX_NAME;
 
 	private ApplicantRepository applicantRepository;
+	private IGeospatialService geospatialService;
 
 	@Autowired
-	public ElasticsearchService(ApplicantRepository applicantRepository) {
+	public ElasticsearchService(ApplicantRepository applicantRepository, IGeospatialService geospatialService) {
 		this.applicantRepository = applicantRepository;
+		this.geospatialService = geospatialService;
 		client = new RestHighLevelClient(
 				RestClient.builder(new HttpHost("localhost", 9200, "http"), new HttpHost("localhost", 9201, "http")));
 	}
@@ -71,12 +75,29 @@ public class ElasticsearchService implements IElasticsearchService {
 	}
 
 	@Override
-	public Iterable<ApplicantIndexingUnit> simpleBooleanSearch(String key1, String value1, String key2, String value2,
+	public Iterable<ApplicantIndexingUnit> simpleBooleanSearch(ArrayList<String> keys, ArrayList<String> values,
 			boolean isAndOperation) {
 		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
-		addToBooleanQuery(queryBuilder, key1, value1, isAndOperation);
-		addToBooleanQuery(queryBuilder, key2, value2, isAndOperation);
+		for (int i = 0; i < keys.size(); i++) {
+			addToBooleanQuery(queryBuilder, keys.get(i), values.get(i), isAndOperation);
+		}
+
 		return search(queryBuilder);
+	}
+	
+	@Override
+	public Iterable<ApplicantIndexingUnit> geospatialSearch(Coordinates coordinates, double radius) {
+		MatchAllQueryBuilder queryBuilder = new MatchAllQueryBuilder();
+		ArrayList<ApplicantIndexingUnit> result = new ArrayList<ApplicantIndexingUnit>();
+		Iterable<ApplicantIndexingUnit> applicants = search(queryBuilder);
+		for (ApplicantIndexingUnit applicant : applicants) {
+			Coordinates applicantCoordinates = new Coordinates(applicant.getLatitude(), applicant.getLongitude());
+			double distance = geospatialService.distance(coordinates, applicantCoordinates);
+			if (distance <= radius) {
+				result.add(applicant);
+			}
+		}
+		return result;
 	}
 	
 	private void addToBooleanQuery(BoolQueryBuilder queryBuilder, String key, String value, boolean isAndOperation) {

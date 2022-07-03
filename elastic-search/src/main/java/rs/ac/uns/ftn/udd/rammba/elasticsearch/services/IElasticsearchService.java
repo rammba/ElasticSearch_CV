@@ -1,8 +1,10 @@
 package rs.ac.uns.ftn.udd.rammba.elasticsearch.services;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.ApplicantIndexingUnit;
+import rs.ac.uns.ftn.udd.rammba.elasticsearch.model.Coordinates;
 
 public interface IElasticsearchService {
 
@@ -14,6 +16,8 @@ public interface IElasticsearchService {
 
 	Iterable<ApplicantIndexingUnit> phraseSearch(String namePhrase, String surnamePhrase, String cvPhrase);
 
-	Iterable<ApplicantIndexingUnit> simpleBooleanSearch(String key1, String value1, String key2, String value2,
+	Iterable<ApplicantIndexingUnit> simpleBooleanSearch(ArrayList<String> keys, ArrayList<String> values,
 			boolean isAndOperation);
+
+	Iterable<ApplicantIndexingUnit> geospatialSearch(Coordinates coordinates, double radius);
 }
