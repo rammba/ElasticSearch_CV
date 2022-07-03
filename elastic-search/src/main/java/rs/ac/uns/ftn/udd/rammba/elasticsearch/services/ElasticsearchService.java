@@ -53,7 +53,7 @@ public class ElasticsearchService implements IElasticsearchService {
 	}
 
 	@Override
-	public Iterable<ApplicantIndexingUnit> getByFields(Map<String, String> fields) {
+	public Iterable<ApplicantIndexingUnit> searchByFields(Map<String, String> fields) {
 		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
 		for (Map.Entry<String, String> entry : fields.entrySet()) {
 			queryBuilder.must(QueryBuilders.matchQuery(entry.getKey(), entry.getValue()));
@@ -62,7 +62,7 @@ public class ElasticsearchService implements IElasticsearchService {
 	}
 
 	@Override
-	public Iterable<ApplicantIndexingUnit> getByCvContent(String cvContent) {
+	public Iterable<ApplicantIndexingUnit> searchByCvContent(String cvContent) {
 		QueryStringQueryBuilder queryBuilder = new QueryStringQueryBuilder(cvContent);
 		queryBuilder.defaultField("cvContent");
 		queryBuilder.defaultOperator(Operator.AND);

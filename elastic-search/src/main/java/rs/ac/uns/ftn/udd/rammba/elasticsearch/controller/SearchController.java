@@ -39,7 +39,7 @@ public class SearchController {
 			fields.put("surname", surname);
 		}
 		
-		Iterable<ApplicantIndexingUnit> results = elasticService.getByFields(fields);
+		Iterable<ApplicantIndexingUnit> results = elasticService.searchByFields(fields);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 	
@@ -50,13 +50,13 @@ public class SearchController {
 			fields.put("degree", degree);
 		}
 		
-		Iterable<ApplicantIndexingUnit> results = elasticService.getByFields(fields);
+		Iterable<ApplicantIndexingUnit> results = elasticService.searchByFields(fields);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "cv")
 	public ResponseEntity<Object> searchCvName(@RequestParam(name = "cvContent", required = false) String cvContent) {
-		Iterable<ApplicantIndexingUnit> results = elasticService.getByCvContent(cvContent);
+		Iterable<ApplicantIndexingUnit> results = elasticService.searchByCvContent(cvContent);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 	
