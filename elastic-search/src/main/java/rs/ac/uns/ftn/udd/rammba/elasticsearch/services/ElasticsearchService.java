@@ -69,8 +69,8 @@ public class ElasticsearchService implements IElasticsearchService {
 	}
 
 	@Override
-	public Iterable<ApplicantIndexingUnit> phraseSearch(String namePhrase, String surnamePhrase, String cvPhrase) {
-		MatchPhraseQueryBuilder queryBuilder = new MatchPhraseQueryBuilder("cvContent", cvPhrase);
+	public Iterable<ApplicantIndexingUnit> phraseSearch(String field, String value) {
+		MatchPhraseQueryBuilder queryBuilder = new MatchPhraseQueryBuilder(field, value);
 		return search(queryBuilder);
 	}
 

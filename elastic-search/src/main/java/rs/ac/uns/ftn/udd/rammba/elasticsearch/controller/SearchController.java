@@ -66,16 +66,15 @@ public class SearchController {
 	}
 
 	@GetMapping(value = "cv")
-	public ResponseEntity<Object> searchCvName(@RequestParam(name = "cvContent", required = false) String cvContent) {
+	public ResponseEntity<Object> searchCvName(@RequestParam(name = "cvContent", required = true) String cvContent) {
 		Iterable<ApplicantIndexingUnit> results = elasticService.searchByCvContent(cvContent);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "phrase")
-	public ResponseEntity<Object> phraseSearch(@RequestParam(name = "namePhrase", required = false) String namePhrase,
-			@RequestParam(name = "surnamePhrase", required = false) String surnamePhrase,
-			@RequestParam(name = "cvPhrase", required = false) String cvPhrase) {
-		Iterable<ApplicantIndexingUnit> results = elasticService.phraseSearch(namePhrase, surnamePhrase, cvPhrase);
+	public ResponseEntity<Object> phraseSearch(@RequestParam(name = "field", required = true) String field,
+			@RequestParam(name = "value", required = true) String value) {
+		Iterable<ApplicantIndexingUnit> results = elasticService.phraseSearch(field, value);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 

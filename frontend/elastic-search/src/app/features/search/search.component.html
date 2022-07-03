@@ -7,5 +7,8 @@
 <mat-checkbox [(ngModel)]="cvContent">Cv content search</mat-checkbox>
 <app-cv-content-search *ngIf="cvContent"></app-cv-content-search>
 <br>
+<mat-checkbox [(ngModel)]="phrase">Phrase search</mat-checkbox>
+<app-phrase-search *ngIf="phrase"></app-phrase-search>
+<br>
 <mat-checkbox [(ngModel)]="simpleBoolean">Boolean simple search</mat-checkbox>
 <app-boolean-simple-search *ngIf="simpleBoolean"></app-boolean-simple-search>

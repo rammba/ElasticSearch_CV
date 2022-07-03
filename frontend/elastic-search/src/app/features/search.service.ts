@@ -34,6 +34,14 @@ export class SearchService {
     return this.http.get<Applicant[]>(this.pathPrefix + 'cv', { headers: this.getHeaders(), params: params });
   }
 
+  phrase(field: string, value: string): Observable<Applicant[]> {
+    let params = new HttpParams()
+      .set('field', field)
+      .set('value', value);
+
+    return this.http.get<Applicant[]>(this.pathPrefix + 'phrase', { headers: this.getHeaders(), params: params });
+  }
+
   booleanSimple(key1: string, value1: string, key2: string, value2: string, isAndOperation: boolean): Observable<Applicant[]> {
     let params = new HttpParams()
       .set('key1', key1)

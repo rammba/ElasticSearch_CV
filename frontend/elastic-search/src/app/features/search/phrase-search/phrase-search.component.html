@@ -1,0 +1,16 @@
+<div [formGroup]="form">
+    <mat-select formControlName="field">
+        <mat-option *ngFor="let field of fieldOptions" [value]="field">{{field}}</mat-option>
+    </mat-select>
+    <mat-form-field appearance="fill">
+        <input matInput formControlName="value">
+    </mat-form-field>
+</div>
+
+<button class="button" type="submit" (click)="onSubmit()">Search</button>
+
+<app-applicant-list [applicants]="applicants" *ngIf="applicants.length"></app-applicant-list>
+<div *ngIf="!applicants.length">
+    <br>
+    <label>No results</label>
+</div>

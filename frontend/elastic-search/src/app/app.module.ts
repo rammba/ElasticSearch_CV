@@ -18,6 +18,7 @@ import { DegreeSearchComponent } from './features/search/degree-search/degree-se
 import { CvContentSearchComponent } from './features/search/cv-content-search/cv-content-search.component';
 import { MatSelectModule } from '@angular/material/select';
 import { BooleanSimpleSearchComponent } from './features/search/boolean-simple-search/boolean-simple-search.component';
+import { PhraseSearchComponent } from './features/search/phrase-search/phrase-search.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { BooleanSimpleSearchComponent } from './features/search/boolean-simple-s
     ApplicantListComponent,
     DegreeSearchComponent,
     CvContentSearchComponent,
-    BooleanSimpleSearchComponent
+    BooleanSimpleSearchComponent,
+    PhraseSearchComponent
   ],
   imports: [
     BrowserModule,

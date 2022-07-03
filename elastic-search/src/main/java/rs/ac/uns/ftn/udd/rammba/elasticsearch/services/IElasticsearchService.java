@@ -14,7 +14,7 @@ public interface IElasticsearchService {
 
 	Iterable<ApplicantIndexingUnit> searchByCvContent(String cvContent);
 
-	Iterable<ApplicantIndexingUnit> phraseSearch(String namePhrase, String surnamePhrase, String cvPhrase);
+	Iterable<ApplicantIndexingUnit> phraseSearch(String field, String value);
 
 	Iterable<ApplicantIndexingUnit> simpleBooleanSearch(ArrayList<String> keys, ArrayList<String> values,
 			boolean isAndOperation);
