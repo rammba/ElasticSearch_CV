@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.udd.rammba.elasticsearch.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,9 +17,6 @@ public interface IElasticsearchService {
 
 	Iterable<ApplicantIndexingUnit> phraseSearch(String field, String value);
 
-	Iterable<ApplicantIndexingUnit> simpleBooleanSearch(ArrayList<String> keys, ArrayList<String> values,
-			boolean isAndOperation);
-	
 	Iterable<ApplicantIndexingUnit> advancedBooleanSearch(List<BooleanSearchDto> request);
 
 	Iterable<ApplicantIndexingUnit> geospatialSearch(Coordinates coordinates, double radius);

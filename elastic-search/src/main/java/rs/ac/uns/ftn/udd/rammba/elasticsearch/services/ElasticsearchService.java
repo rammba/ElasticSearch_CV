@@ -77,17 +77,6 @@ public class ElasticsearchService implements IElasticsearchService {
 	}
 
 	@Override
-	public Iterable<ApplicantIndexingUnit> simpleBooleanSearch(ArrayList<String> keys, ArrayList<String> values,
-			boolean isAndOperation) {
-		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
-		for (int i = 0; i < keys.size(); i++) {
-			addToBooleanQuery(queryBuilder, keys.get(i), values.get(i), isAndOperation);
-		}
-
-		return search(queryBuilder);
-	}
-	
-	@Override
 	public Iterable<ApplicantIndexingUnit> advancedBooleanSearch(List<BooleanSearchDto> request) {
 		BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
 		for (BooleanSearchDto dto : request) {
@@ -96,7 +85,7 @@ public class ElasticsearchService implements IElasticsearchService {
 
 		return search(queryBuilder);
 	}
-	
+
 	@Override
 	public Iterable<ApplicantIndexingUnit> geospatialSearch(Coordinates coordinates, double radius) {
 		MatchAllQueryBuilder queryBuilder = new MatchAllQueryBuilder();
@@ -111,7 +100,7 @@ public class ElasticsearchService implements IElasticsearchService {
 		}
 		return result;
 	}
-	
+
 	private void addToBooleanQuery(BoolQueryBuilder queryBuilder, String key, String value, boolean isAndOperation) {
 		QueryBuilder qb = QueryBuilders.matchQuery(key, value);
 		if (key.equals("cvContent")) {

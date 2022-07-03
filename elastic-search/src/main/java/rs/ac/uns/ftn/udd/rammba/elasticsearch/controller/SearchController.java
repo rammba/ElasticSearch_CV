@@ -1,7 +1,6 @@
 package rs.ac.uns.ftn.udd.rammba.elasticsearch.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,9 +86,10 @@ public class SearchController {
 			@RequestParam(name = "key2", required = true) String key2,
 			@RequestParam(name = "value2", required = true) String value2,
 			@RequestParam(name = "isAndOperation", required = true) boolean isAndOperation) {
-		ArrayList<String> keys = new ArrayList<String>(Arrays.asList(key1, key2));
-		ArrayList<String> values = new ArrayList<String>(Arrays.asList(value1, value2));
-		Iterable<ApplicantIndexingUnit> results = elasticService.simpleBooleanSearch(keys, values, isAndOperation);
+		ArrayList<BooleanSearchDto> query = new ArrayList<BooleanSearchDto>();
+		query.add(new BooleanSearchDto(key1, value1, isAndOperation));
+		query.add(new BooleanSearchDto(key2, value2, isAndOperation));
+		Iterable<ApplicantIndexingUnit> results = elasticService.advancedBooleanSearch(query);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 
